@@ -32,12 +32,6 @@ public class Main{
 	
 	public void init(Main main) throws IOException, ClassNotFoundException {
 		/*Game game1 = new Game();
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-
-		for(int i = 0; i < 26; i++){
-			game1.getAlphabet().add(br.readLine());
-		}
-
 		ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("data\\Data.txt"));
         oos.writeObject(game1);
         oos.close();*/
@@ -57,7 +51,7 @@ public class Main{
 		
 		if(comand == 1) {
 			main.getGui().format(new Scanner(System.in));
-			main.getGui().play(new Scanner(System.in));
+			main.getGui().inGame("main", new Scanner(System.in));
 			
 		}else if(comand == 2) {
 			

@@ -105,6 +105,11 @@ public class Box implements Serializable{
 
 		return players;
 	}
+
+	public Character getPlayerToken(int index){
+
+		return getPlayers().get(index).getToken();
+	}
 	
 	
 	

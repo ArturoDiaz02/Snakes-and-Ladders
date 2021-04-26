@@ -1,9 +1,7 @@
 package ui;
 
-import java.util.ArrayList;
 import java.util.Scanner;
 import model.*;
-import model.LinkedList.MeLinkedLists;
 
 public class SnakesAndLaddersGUI {
 
@@ -11,7 +9,9 @@ public class SnakesAndLaddersGUI {
 	
 	public SnakesAndLaddersGUI() {}
 	
+
 	public Game getGame() {	return game;}
+
 
     public int menus (Scanner scanner){
         int control = 0;
@@ -73,13 +73,13 @@ public class SnakesAndLaddersGUI {
 	
 
     public void creator(String next) {
-		ArrayList<String> format = spliter(next, new ArrayList<>(), 0);
+		String[] format = spliter(next, new String[5], 0);
 
-		int rows = Integer.parseInt(format.get(0));
-		int colums = Integer.parseInt(format.get(1));
-		int snakes = Integer.parseInt(format.get(2));
-		int ladders = Integer.parseInt(format.get(3));
-		String tokens = format.get(4);
+		int rows = Integer.parseInt(format[0]);
+		int colums = Integer.parseInt(format[1]);
+		int snakes = Integer.parseInt(format[2]);
+		int ladders = Integer.parseInt(format[3]);
+		String tokens = format[4];
 
 		game.setColums(colums);
 		game.setRows(rows);
@@ -162,7 +162,7 @@ public class SnakesAndLaddersGUI {
 		
 		createBox(rows * colums, 0, colums, false, 0);
 		createPlayers(tokens, rows * colums, 0);
-
+		
 		setLadders(rows * colums, ladders, 0);
 		setSnakes(rows * colums, snakes, 0);
 		
@@ -173,6 +173,7 @@ public class SnakesAndLaddersGUI {
 		
 		if(contador < tokens.length()){
 			game.getBoxs().get(0).getPlayers().add(new Players(tokens.charAt(contador), missingBoxes));
+			game.getPlayers().add(new Players(tokens.charAt(contador), missingBoxes - 1));
 			createPlayers(tokens, missingBoxes, contador + 1);
 			
 		}
@@ -184,21 +185,22 @@ public class SnakesAndLaddersGUI {
 
 		if(contador < amountBoxs && ladders != 0){
 
-			int head = (int) (Math.random() * (amountBoxs - 2) + 2);
-			int tail = (int) (Math.random() * (head - 2) + 2);
+			int head = (int) (Math.random() * (amountBoxs - 2) + 1);
+			int tail = (int) (Math.random() * (head - 2)  + 2);
+			
 
 			if (game.getBoxs().get(head).getAction() || game.getBoxs().get(tail).getAction()) {
 				setLadders(amountBoxs, ladders, contador);
 
 			}else{
-
+		
 				game.getBoxs().get(tail).setAction(true);
 				game.getBoxs().get(tail).setTypeAction(false); //true es serpiente y false escalera
 				game.getBoxs().get(tail).setSendTo(head);
 				game.getBoxs().get(tail).setIdAction(String.valueOf(contador + 1));
 	
 				game.getBoxs().get(head).setAction(true);
-				game.getBoxs().get(head).setTypeAction(true); 
+				game.getBoxs().get(head).setTypeAction(false); 
 				game.getBoxs().get(head).setIdAction(game.getBoxs().get(tail).getIdAction());
 				setLadders(amountBoxs, ladders - 1, contador + 1);
 			}
@@ -213,12 +215,12 @@ public class SnakesAndLaddersGUI {
 
 		if(contador < amountBoxs && snakes != 0){
 
-			int head = (int) (Math.random() * (amountBoxs - 2) + 2);
+			int head = (int) (Math.random() * (amountBoxs - 2) + 1);
 			int tail = (int) (Math.random() * (head - 2) + 2);
 
 			if (game.getBoxs().get(head).getAction() || game.getBoxs().get(tail).getAction()) {
 				setSnakes(amountBoxs, snakes, contador);
-
+				
 			}else{
 
 				game.getBoxs().get(head).setAction(true);
@@ -291,10 +293,10 @@ public class SnakesAndLaddersGUI {
 	}
     
  
-	public ArrayList<String> spliter(String next, ArrayList<String> format, int contador) {
+	public String[] spliter(String next, String[] format, int contador) {
 
     	if(contador < 5) {
-    		format.add(next.split(" ")[contador]);
+    		format[contador] = (next.split(" ")[contador]);
     		spliter(next, format, contador + 1);
     	}
     	
@@ -303,25 +305,74 @@ public class SnakesAndLaddersGUI {
     }
 
 
-	public void play(Scanner scanner) {
+	public void play(Scanner scanner, int player) {
 
-		showBoardWithEspecials(0, game.getColums() * game.getRows(), 0, game.getColums() * game.getRows() - game.getColums());
+	    System.out.print("*********************************************************************************************\n");
+		System.out.print("Tablero de Juego\n\n");
+		showBoard(0, game.getColums() * game.getRows(), 0, game.getColums() * game.getRows() - game.getColums());
+	    System.out.print("\n*********************************************************************************************\n");
+	    System.out.println("*. Precione enter para tirar el dado (" + game.getPlayers().get(player).getToken() + "):");
+		System.out.println("*. Escriba (num) para ir al Tablero de Comodines:");
+		System.out.println("*. Escriba (simul) para generar una simulacion del juego:");
+		System.out.println("*. Escriba (menu) para terminar el juego y ir al menu:");
+	    System.out.print(">");
 
-		//limpiarPantalla();
-		String vali = scanner.nextLine();
+		switch(scanner.nextLine()){
+				case "":
+				rollDice(player, scanner);
+				break;
 
-		if(vali.equals("1")){
-			inGame("main");
+				case "num":
+				inGame("num", scanner);
+				break;
+
+				case "simul":
+				inGame("simul", scanner);
+				break;
+
+				case "menu":
+				inGame("menu", scanner);
+				break;
+
 		}
+
+		limpiarPantalla();
+
 
 	}
 
+	private void rollDice(int player, Scanner scanner){
+		int dice = (int) (Math.random() * 6 + 1);
+		System.out.println("El jugador " + game.getPlayers().get(player).getToken() + " ha lanzado el dado y obtuvo el puntaje " + dice + ".\n");
+		game.playerMove(game.getPlayers().get(player).getToken(), dice);
 
-	private void inGame(String index) {
+		if(player ==  game.getPlayers().size() - 1){
+			play(scanner, 0);
+
+		}else{
+			play(scanner, player + 1);
+		}
+
+		
+
+	}
+
+	public void inGame(String index, Scanner scanner) {
 
 		switch (index) {
 			case "main":
-				showBoard(0, game.getColums() * game.getRows(), 0, game.getColums() * game.getRows() - game.getColums());
+				limpiarPantalla();
+				System.out.print("*********************************************************************************************\n");
+				System.out.print("Tablero de Comodines\n\n");
+				showBoardWithEspecials(0, game.getColums() * game.getRows(), 0, game.getColums() * game.getRows() - game.getColums());
+				System.out.print("\n\n*********************************************************************************************\n");
+				System.out.println("Precione Enter para iniciar:");
+	    		System.out.print(">");
+
+				if(scanner.nextLine().equals("")){
+					limpiarPantalla();
+					play(scanner, 0);
+				}
 
 				break;
 		
@@ -331,6 +382,7 @@ public class SnakesAndLaddersGUI {
 		}
 
 	}
+
 
 	public void showBoardWithEspecials(int contador, int sizeBoard, int jump, int index){//quitar 1 de size
 		if(contador < sizeBoard){
