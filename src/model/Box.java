@@ -99,8 +99,8 @@ public class Box implements Serializable{
 	private String playerIn(int contador, String players){
 
 		if(contador < getPlayers().size()){
-			players = players + getPlayers().get(contador).getToken();
-			playerIn(contador + 1, players);
+			players = players + getPlayers().get(contador).getToken() + playerIn(contador + 1, players); 
+			
 		}
 
 		return players;
