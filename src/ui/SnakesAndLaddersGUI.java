@@ -247,7 +247,15 @@ public class SnakesAndLaddersGUI {
 			}
 
 			if(!vali){
-				game.getBoxs().add(new Box(contador + 1));
+				String  num;
+
+				if(contador + 1 > 9){
+					num = String.valueOf(contador + 1);
+				}else{
+					num = "0" + (contador + 1);
+				}
+
+				game.getBoxs().add(new Box(num));
 
 				if(contador == 0){
 					game.getBoxs().get(contador).setPlayers(players);
@@ -255,7 +263,16 @@ public class SnakesAndLaddersGUI {
 			}
 
 			if(vali){
-				game.getBoxs().add(new Box(index));
+
+				String  num;
+				
+				if(contador + 1 > 9){
+					num = String.valueOf(contador + 1);
+				}else{
+					num = "0" + (contador + 1);
+				}
+
+				game.getBoxs().add(new Box(num));
 				index -= 1;
 
 			}
@@ -301,7 +318,7 @@ public class SnakesAndLaddersGUI {
 
 		switch (index) {
 			case "main":
-				showBoard(0, (game.getColums() * game.getRows()), game.getColums());
+				showBoard(0, game.getColums() * game.getRows(), 0, game.getColums() * game.getRows() - game.getColums());
 
 				break;
 		
@@ -315,14 +332,6 @@ public class SnakesAndLaddersGUI {
 	public void showBoardWithEspecials(int contador, int sizeBoard, int jump, int index){//quitar 1 de size
 		if(contador < sizeBoard){
 
-			if(jump == game.getColums() - 1){
-				index -= game.getColums();
-				jump = 0;
-
-				System.out.println();
-
-			}
-
 			if(game.getBoxs().get(index + jump).getAction()){
 				System.out.print("[" + game.getBoxs().get(index + jump).getNumBox() + " " + game.getBoxs().get(index + jump).getIdAction() + "]");
 	
@@ -330,27 +339,31 @@ public class SnakesAndLaddersGUI {
 				System.out.print("[" + game.getBoxs().get(index + jump).getNumBox() + "  ]");
 	
 			}
-			
 
-			if(contador == sizeBoard - 1){
+			if(jump == game.getColums() - 1){
+				index -= game.getColums();
+				jump = 0;
+
 				System.out.println();
+
+				showBoardWithEspecials(contador + 1, sizeBoard, jump, index);
+
+				
+
+			}else{
+
+				showBoardWithEspecials(contador + 1, sizeBoard, jump + 1, index);
 			}
 
-			showBoardWithEspecials(contador + 1, sizeBoard, jump + 1, index);
-			
+		
 		}
 
 	}
 
 
-	public void showBoard(int contador, int sizeBoard, int jump){
+	public void showBoard(int contador, int sizeBoard, int jump, int index){
+
 		if(contador < sizeBoard){
-
-			if(contador == jump){
-				System.out.println();
-				jump += game.getColums();
-
-			}
 
 			if(game.getBoxs().get(sizeBoard - contador).getAction()){
 				System.out.print("[" + game.getBoxs().get(sizeBoard - contador).getIdAction() + " " + game.getBoxs().get(sizeBoard - contador).playerIn() + "]");
@@ -360,12 +373,22 @@ public class SnakesAndLaddersGUI {
 
 			}
 
-			if(contador + 1 == sizeBoard){
+			if(jump == game.getColums() - 1){
+				index -= game.getColums();
+				jump = 0;
+
 				System.out.println();
+
+				showBoard(contador + 1, sizeBoard, jump, index);
+
+				
+
+			}else{
+
+				showBoard(contador + 1, sizeBoard, jump + 1, index);
 			}
 
-			showBoard(contador + 1, sizeBoard, jump);
-			
+		
 		}
 
 	}

@@ -8,14 +8,14 @@ public class Box implements Serializable{
 	
 	private static final long serialVersionUID = 2L;
 
-	private int numBox;
+	private String numBox;
 	private boolean action;
 	private boolean typeAction;
 	private String idAction;
 	private int sendTo;
 	private MeLinkedLists<Players> players;
 	
-	public Box(int num) {
+	public Box(String num) {
 		this.numBox = num;
 		this.action = false;
 		this.typeAction = false;
@@ -52,11 +52,11 @@ public class Box implements Serializable{
 		this.idAction = idAction;
 	}
 
-	public int getNumBox() {
+	public String getNumBox() {
 		return numBox;
 	}
 
-	public void setNumBox(int numBox) {
+	public void setNumBox(String numBox) {
 		this.numBox = numBox;
 	}
 
