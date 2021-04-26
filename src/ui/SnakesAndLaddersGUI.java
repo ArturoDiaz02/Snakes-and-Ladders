@@ -185,9 +185,9 @@ public class SnakesAndLaddersGUI {
 		if(contador < amountBoxs && ladders != 0){
 
 			int head = (int) (Math.random() * (amountBoxs - 2) + 1);
-			int tail = (int) (Math.random() * (head - 1) + 1);
+			int tail = (int) (Math.random() * (head - 2) + 1);
 
-			if (head == tail || head < tail || game.getBoxs().get(head).getAction() || game.getBoxs().get(tail).getAction()) {
+			if (game.getBoxs().get(head).getAction() || game.getBoxs().get(tail).getAction()) {
 				setLadders(amountBoxs, ladders, contador);
 
 			}else{
@@ -213,9 +213,9 @@ public class SnakesAndLaddersGUI {
 		if(contador < amountBoxs && snakes != 0){
 
 			int head = (int) (Math.random() * (amountBoxs - 2) + 1);
-			int tail = (int) (Math.random() * (head - 1) + 1);
+			int tail = (int) (Math.random() * (head - 2) + 1);
 
-			if (head == tail || head < tail || game.getBoxs().get(head).getAction() || game.getBoxs().get(tail).getAction()) {
+			if (game.getBoxs().get(head).getAction() || game.getBoxs().get(tail).getAction()) {
 				setSnakes(amountBoxs, snakes, contador);
 
 			}else{
@@ -275,10 +275,10 @@ public class SnakesAndLaddersGUI {
 
 				String  num;
 				
-				if(contador + 1 > 9){
-					num = String.valueOf(contador + 1);
+				if(index > 9){
+					num = String.valueOf(index);
 				}else{
-					num = "0" + (contador + 1);
+					num = "0" + (index);
 				}
 
 				game.getBoxs().add(new Box(num));
@@ -352,8 +352,6 @@ public class SnakesAndLaddersGUI {
 				System.out.println();
 
 				showBoardWithEspecials(contador + 1, sizeBoard, jump, index);
-
-				
 
 			}else{
 
