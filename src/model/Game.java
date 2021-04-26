@@ -9,22 +9,12 @@ public class Game implements Serializable{
 	private static final long serialVersionUID = 1L;
 	private MeLinkedLists<Box> boxs;
 	private MeLinkedLists<Players> leaderBoard;
-	private MeLinkedLists<String> alphabet;
 	private int colums;
 	private int rows;
-	
-	public Game(Game game) {
-		boxs = new MeLinkedLists<>();
-		leaderBoard = game.getLeaderBoard();
-		alphabet =  game.getAlphabet();
-		colums = 0;
-		rows = 0;		
-	}
 
 	public Game() {
 		boxs = new MeLinkedLists<>();
 		leaderBoard =  new MeLinkedLists<>();
-		alphabet =   new MeLinkedLists<>();
 		colums = 0;
 		rows = 0;		
 	}
@@ -46,14 +36,6 @@ public class Game implements Serializable{
 		this.rows = rows;
 	}
 
-	public MeLinkedLists<String> getAlphabet() {
-		return this.alphabet;
-	}
-
-	public void setAlphabet(MeLinkedLists<String> alphabet) {
-		this.alphabet = alphabet;
-	}
-	
 	public MeLinkedLists<Players> getLeaderBoard() {
 		return leaderBoard;
 	}
