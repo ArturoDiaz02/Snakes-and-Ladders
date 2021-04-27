@@ -8,14 +8,12 @@ public class Players implements Serializable{
 	private String name;
 	private Character token;
 	private int movement;
-	private int missingBoxes;
 	private int currentBox;
 	
-	public Players(Character token, int missingBoxes) {
+	public Players(Character token) {
 		this.name = null;
 		this.token = token;
 		this.movement = 0;
-		this.missingBoxes = missingBoxes;
 		this.currentBox = 1;
 	}
 
@@ -41,14 +39,6 @@ public class Players implements Serializable{
 
 	public void setMovement(int movement) {
 		this.movement = movement;
-	}
-
-	public int getMissingBoxes() {
-		return missingBoxes;
-	}
-
-	public void setMissingBoxes(int missingBoxes) {
-		this.missingBoxes = missingBoxes;
 	}
 
 	public int getCurrentBox() {

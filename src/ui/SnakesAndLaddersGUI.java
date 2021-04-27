@@ -2,6 +2,8 @@ package ui;
 
 import java.util.ArrayList;
 import java.util.Scanner;
+
+import jdk.tools.jlink.internal.plugins.SystemModulesPlugin;
 import model.*;
 import model.LinkedList.MeLinkedLists;
 
@@ -161,7 +163,7 @@ public class SnakesAndLaddersGUI {
 		}
 		
 		createBox(rows * colums, 0, colums, false, 0);
-		createPlayers(tokens, rows * colums, 0);
+		createPlayers(tokens, 0);
 
 		setLadders(rows * colums, ladders, 0);
 		setSnakes(rows * colums, snakes, 0);
@@ -169,11 +171,12 @@ public class SnakesAndLaddersGUI {
 	}
 
 
-    public void createPlayers(String tokens, int missingBoxes, int contador) {
+    public void createPlayers(String tokens, int contador) {
 		
 		if(contador < tokens.length()){
-			game.getBoxs().get(0).getPlayers().add(new Players(tokens.charAt(contador), missingBoxes));
-			createPlayers(tokens, missingBoxes, contador + 1);
+			game.getBoxs().get(0).getPlayers().add(new Players(tokens.charAt(contador)));
+			game.getPlayers().add(new Players(tokens.charAt(contador)));
+			createPlayers(tokens, contador + 1);
 			
 		}
 	
@@ -193,12 +196,12 @@ public class SnakesAndLaddersGUI {
 			}else{
 
 				game.getBoxs().get(tail).setAction(true);
-				game.getBoxs().get(tail).setTypeAction(false); //true es serpiente y false escalera
+				game.getBoxs().get(tail).setTypeAction(true); //true es serpiente y false escalera
 				game.getBoxs().get(tail).setSendTo(head);
 				game.getBoxs().get(tail).setIdAction(String.valueOf(contador + 1));
 	
 				game.getBoxs().get(head).setAction(true);
-				game.getBoxs().get(head).setTypeAction(true); 
+				game.getBoxs().get(head).setTypeAction(false); 
 				game.getBoxs().get(head).setIdAction(game.getBoxs().get(tail).getIdAction());
 				setLadders(amountBoxs, ladders - 1, contador + 1);
 			}
@@ -227,7 +230,7 @@ public class SnakesAndLaddersGUI {
 				game.getBoxs().get(head).setIdAction(String.valueOf(Alphabet.letter(contador)));
 			
 				game.getBoxs().get(tail).setAction(true);
-				game.getBoxs().get(tail).setTypeAction(true); 
+				game.getBoxs().get(tail).setTypeAction(false); 
 				game.getBoxs().get(tail).setIdAction(game.getBoxs().get(head).getIdAction());
 				setSnakes(amountBoxs, snakes - 1, contador + 1);
 			}
@@ -265,7 +268,7 @@ public class SnakesAndLaddersGUI {
 					num = "0" + (contador + 1);
 				}
 
-				game.getBoxs().add(new Box(num));
+				game.getBoxs().add(new Box(num, contador + 1));
 
 			}
 
@@ -279,7 +282,7 @@ public class SnakesAndLaddersGUI {
 					num = "0" + (index);
 				}
 
-				game.getBoxs().add(new Box(num));
+				game.getBoxs().add(new Box(num, index));
 				index -= 1;
 
 			}
@@ -303,31 +306,115 @@ public class SnakesAndLaddersGUI {
     }
 
 
-	public void play(Scanner scanner) {
+	public void play(Scanner scanner, int player) {
 
-		showBoardWithEspecials(0, game.getColums() * game.getRows(), 0, game.getColums() * game.getRows() - game.getColums());
+	    System.out.print("*********************************************************************************************\n");
+		System.out.print("Tablero de Juego\n\n");
+		showBoard(0, game.getColums() * game.getRows(), 0, game.getColums() * game.getRows() - game.getColums());
+	    System.out.print("\n*********************************************************************************************\n");
+	    System.out.println("*. Precione enter para tirar el dado (" + game.getPlayers().get(player).getToken() + "):");
+		System.out.println("*. Escriba (num) para ir al Tablero de Comodines:");
+		System.out.println("*. Escriba (simul) para generar una simulacion del juego:");
+		System.out.println("*. Escriba (menu) para terminar el juego y ir al menu:");
+	    System.out.print(">");
 
-		//limpiarPantalla();
-		String vali = scanner.nextLine();
+		String index = scanner.nextLine();
 
-		if(vali.equals("1")){
-			inGame("main");
+		switch(index){
+			case "":
+				rollDice(player, scanner);
+
+			case "num":
+				inGame("num", scanner);
+			
+
+			case "simul":
+				inGame("simul", scanner);
+				
+
+			case "menu":
+				inGame("menu", scanner);
+		
 		}
 
 	}
 
+	private void rollDice(int player, Scanner scanner){
+		int dice = (int) (Math.random() * 6 + 1);
+		System.out.println("\nEl jugador " + game.getPlayers().get(player).getToken() + " ha lanzado el dado y obtuvo el puntaje " + dice + ".\n");
+		boolean win = game.playerMove(game.getPlayers().get(player).getToken(), dice);
 
-	private void inGame(String index) {
+		if(win){
+			Players winPlayer = game.getPlayers().get(player);
+			game.setPlayers(new MeLinkedLists<Players>());
+			game.setBoxs(new MeLinkedLists<Box>());
+			game.setColums(0);
+			game.setRows(0);
+
+			System.out.print("*********************************************************************************************\n");
+			System.out.print("Ganador\n\n");
+			System.out.print("El jugador " + winPlayer.getToken() + " ha ganado el juego, con " + winPlayer.getMovement());
+			System.out.print("\n*********************************************************************************************\n");
+			System.out.println("Escriba su nombre para registrarlo en la tabla:");
+			System.out.print(">");
+			winPlayer.setName(scanner.nextLine());
+			//arbol binario
+
+
+
+		}else{
+
+			if(player ==  game.getPlayers().size() - 1){
+
+				play(scanner, 0);
+	
+			}else{
+				play(scanner, player + 1);
+			}
+		}
+
+		
+
+		
+
+	}
+	
+	
+	public void inGame(String index, Scanner scanner) {
 
 		switch (index) {
 			case "main":
-				showBoard(0, game.getColums() * game.getRows(), 0, game.getColums() * game.getRows() - game.getColums());
+			limpiarPantalla();
+			System.out.print("*********************************************************************************************\n");
+			System.out.print("Tablero de Comodines\n\n");
+			showBoardWithEspecials(0, game.getColums() * game.getRows(), 0, game.getColums() * game.getRows() - game.getColums());
+			System.out.print("\n\n*********************************************************************************************\n");
+			System.out.println("Precione Enter para iniciar:");
+			System.out.print(">");
 
-				break;
-		
-			default:
-				System.out.println("error");
-				break;
+			if(scanner.nextLine().equals("")){
+				limpiarPantalla();
+				play(scanner, 0);
+			}
+
+			break;
+
+			case "num":
+				inGame("main", scanner);
+			
+
+			case "simul":
+				//inGame("simul", scanner);
+				
+
+			case "menu":
+				game.setPlayers(new MeLinkedLists<Players>());
+				game.setBoxs(new MeLinkedLists<Box>());
+				game.setColums(0);
+				game.setRows(0);
+				menus(scanner);
+			
+			break;
 		}
 
 	}
