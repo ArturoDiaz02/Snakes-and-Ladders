@@ -161,7 +161,7 @@ public class SnakesAndLaddersGUI {
 		}
 		
 		createBox(rows * colums, 0, colums, false, 0);
-		createPlayers(tokens, rows * colums, 0);
+		createPlayers(tokens, 0);
 		
 		setLadders(rows * colums, ladders, 0);
 		setSnakes(rows * colums, snakes, 0);
@@ -169,12 +169,12 @@ public class SnakesAndLaddersGUI {
 	}
 
 
-    public void createPlayers(String tokens, int missingBoxes, int contador) {
+    public void createPlayers(String tokens, int contador) {
 		
 		if(contador < tokens.length()){
-			game.getBoxs().get(0).getPlayers().add(new Players(tokens.charAt(contador), missingBoxes));
-			game.getPlayers().add(new Players(tokens.charAt(contador), missingBoxes - 1));
-			createPlayers(tokens, missingBoxes, contador + 1);
+			game.getBoxs().get(0).getPlayers().add(new Players(tokens.charAt(contador)));
+			game.getPlayers().add(new Players(tokens.charAt(contador)));
+			createPlayers(tokens, contador + 1);
 			
 		}
 	
@@ -189,7 +189,7 @@ public class SnakesAndLaddersGUI {
 			int tail = (int) (Math.random() * (head - 2)  + 2);
 			
 
-			if (game.getBoxs().get(head).getAction() || game.getBoxs().get(tail).getAction()) {
+			if (head == amountBoxs - 1 || head == tail || game.getBoxs().get(head).getAction() || game.getBoxs().get(tail).getAction()) {
 				setLadders(amountBoxs, ladders, contador);
 
 			}else{
@@ -218,7 +218,7 @@ public class SnakesAndLaddersGUI {
 			int head = (int) (Math.random() * (amountBoxs - 2) + 1);
 			int tail = (int) (Math.random() * (head - 2) + 2);
 
-			if (game.getBoxs().get(head).getAction() || game.getBoxs().get(tail).getAction()) {
+			if (head == amountBoxs - 1 || head == tail || game.getBoxs().get(head).getAction() || game.getBoxs().get(tail).getAction()) {
 				setSnakes(amountBoxs, snakes, contador);
 				
 			}else{
@@ -267,7 +267,7 @@ public class SnakesAndLaddersGUI {
 					num = "0" + (contador + 1);
 				}
 
-				game.getBoxs().add(new Box(num));
+				game.getBoxs().add(new Box(num, contador + 1));
 
 			}
 
@@ -281,7 +281,7 @@ public class SnakesAndLaddersGUI {
 					num = "0" + (index);
 				}
 
-				game.getBoxs().add(new Box(num));
+				game.getBoxs().add(new Box(num, index));
 				index -= 1;
 
 			}
@@ -343,7 +343,7 @@ public class SnakesAndLaddersGUI {
 
 	private void rollDice(int player, Scanner scanner){
 		int dice = (int) (Math.random() * 6 + 1);
-		System.out.println("El jugador " + game.getPlayers().get(player).getToken() + " ha lanzado el dado y obtuvo el puntaje " + dice + ".\n");
+		System.out.println("\nEl jugador " + game.getPlayers().get(player).getToken() + " ha lanzado el dado y obtuvo el puntaje " + dice + ".\n");
 		game.playerMove(game.getPlayers().get(player).getToken(), dice);
 
 		if(player ==  game.getPlayers().size() - 1){

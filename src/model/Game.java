@@ -64,27 +64,19 @@ public class Game implements Serializable{
 
 	public void playerMove(Character token, int dice){
 
-		String indexBox;
 		Players player = searchBox(token, 0, 0, 0).getPlayers().get(0);
-		player.setCurrentBox(player.getCurrentBox() + dice);
+		player.setCurrentBox(searchPosition(player.getCurrentBox() + dice, 0));
 		searchBox(token, 0, 0, 0).getPlayers().remove(0);
+
 		player.setMovement(player.getMovement() + 1);
 
-		if(player.getCurrentBox() < 10){
-			indexBox = "0" + player.getCurrentBox();
-		}else{
-			indexBox =String.valueOf(player.getCurrentBox()) ;
-		}
-
 		if(getBoxs().get(player.getCurrentBox()).getAction() && getBoxs().get(player.getCurrentBox()).getSendTo() != 0){
-			player.setCurrentBox(getBoxs().get(player.getCurrentBox()).getSendTo());
-			player.setMissingBoxes(colums*rows - (getBoxs().indexOf(getBoxs().get(player.getCurrentBox())) + 1));
-			
-			getBoxs().get(searchPosition(indexBox, 0)).getPlayers().add(player);
+			player.setCurrentBox(searchPosition(getBoxs().get(player.getCurrentBox()).getSendTo(), 0));
+
+			getBoxs().get(searchPosition(player.getCurrentBox() + 1, 0)).getPlayers().add(player);
 			
 		}else{
-
-			getBoxs().get(searchPosition(indexBox, 0)).getPlayers().add(player);
+			getBoxs().get(player.getCurrentBox() + 1).getPlayers().add(player);
 		
 		}
 		
@@ -113,20 +105,16 @@ public class Game implements Serializable{
 		
 	}
 
-	private int searchPosition(String token, int contador){
+	private int searchPosition(int num, int index){
 
-		if (getBoxs().size() > contador) {
+		if(getBoxs().get(index).getNumBoxInt() == num){
+            return getBoxs().indexOf(getBoxs().get(index));
 
-			if(getBoxs().get(contador).getNumBox().equals(token)){
-				return getBoxs().indexOf(getBoxs().get(contador));
+        }else{
+            return searchPosition(num, index + 1);
 
-			}else{
-				return searchPosition(token, contador + 1);
-
-			}
-	
-		
-		}
+        }
+			
 		
 	}
 	

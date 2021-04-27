@@ -9,19 +9,29 @@ public class Box implements Serializable{
 	private static final long serialVersionUID = 2L;
 
 	private String numBox;
+	private int numBoxInt;
 	private boolean action;
 	private boolean typeAction;
 	private String idAction;
 	private int sendTo;
 	private MeLinkedLists<Players> players;
 	
-	public Box(String num) {
+	public Box(String num, int numInt) {
 		this.numBox = num;
 		this.action = false;
 		this.typeAction = false;
 		this.players = new MeLinkedLists<>();
 		this.idAction = "";
+		this.numBoxInt = numInt;
 		
+	}
+
+	public int getNumBoxInt() {
+		return this.numBoxInt;
+	}
+
+	public void setNumBoxInt(int numBoxInt) {
+		this.numBoxInt = numBoxInt;
 	}
 
 	public boolean getAction() {
