@@ -1,18 +1,36 @@
 package ui;
 
-import java.util.ArrayList;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.util.Scanner;
 import model.*;
 import model.LinkedList.MeLinkedLists;
 
 public class SnakesAndLaddersGUI {
 
+	/**
+	 * Game object
+	 */
 	private Game game;
-	
+
+	/**
+	 * SnakesAndLaddersGUI constructor
+	 */
 	public SnakesAndLaddersGUI() {}
-	
+
+	/**
+	 * Get Game
+	 * @return game
+	 */
 	public Game getGame() {	return game;}
 
+
+	/**
+	 * Main menu, shows available options 
+	 * @param scanner
+	 * @return control, control variable
+	 */
     public int menus (Scanner scanner){
         int control = 0;
         
@@ -45,7 +63,10 @@ public class SnakesAndLaddersGUI {
 
     }
 	
-    
+    /**
+	 * Format menu, shows available options and ask for the game format that it send to creator method
+	 * @param scanner
+	 */
 	public void format(Scanner scanner) {
 
 		limpiarPantalla();
@@ -71,15 +92,18 @@ public class SnakesAndLaddersGUI {
 		
 	}
 	
-
+	/**
+	 * This method generates the board, first it slips the format, second it filters the snakes and ladders and finally it creates the board and its special squares
+	 * @param next format
+	 */
     public void creator(String next) {
-		ArrayList<String> format = spliter(next, new ArrayList<>(), 0);
+		String[] format = spliter(next, new String[5], 0);
 
-		int rows = Integer.parseInt(format.get(0));
-		int colums = Integer.parseInt(format.get(1));
-		int snakes = Integer.parseInt(format.get(2));
-		int ladders = Integer.parseInt(format.get(3));
-		String tokens = format.get(4);
+		int rows = Integer.parseInt(format[0]);
+		int colums = Integer.parseInt(format[1]);
+		int snakes = Integer.parseInt(format[2]);
+		int ladders = Integer.parseInt(format[3]);
+		String tokens = format[4];
 
 		game.setColums(colums);
 		game.setRows(rows);
@@ -161,44 +185,55 @@ public class SnakesAndLaddersGUI {
 		}
 		
 		createBox(rows * colums, 0, colums, false, 0);
-		createPlayers(tokens, rows * colums, 0);
+		createPlayers(tokens, 0);
 
 		setLadders(rows * colums, ladders, 0);
 		setSnakes(rows * colums, snakes, 0);
 		
 	}
 
-
-    public void createPlayers(String tokens, int missingBoxes, int contador) {
+	/**
+	 * create the players to suit the user and save them in the squares and in the game object
+	 * @param tokens format of players
+	 * @param contador
+	 */
+    public void createPlayers(String tokens, int contador) {
 		
 		if(contador < tokens.length()){
-			game.getBoxs().get(0).getPlayers().add(new Players(tokens.charAt(contador), missingBoxes));
-			createPlayers(tokens, missingBoxes, contador + 1);
+			game.getBoxs().get(0).getPlayers().add(new Players(tokens.charAt(contador)));
+			game.getPlayers().add(new Players(tokens.charAt(contador)));
+			createPlayers(tokens, contador + 1);
 			
 		}
 	
 	}
 
+	/**
+	 * this method randomly creates the ladders on the board
+	 * @param amountBoxs board size
+	 * @param ladders amount ladders
+	 * @param contador
+	 */
 
 	public void setLadders(int amountBoxs, int ladders, int contador) {
 
 		if(contador < amountBoxs && ladders != 0){
 
-			int head = (int) (Math.random() * (amountBoxs - 2) + 2);
-			int tail = (int) (Math.random() * (head - 2) + 2);
+			int head = (int) (Math.random() * (amountBoxs - 2) - 1);
+			int tail = (int) (Math.random() * (amountBoxs - 2) + 1);
 
-			if (game.getBoxs().get(head).getAction() || game.getBoxs().get(tail).getAction()) {
+			if (game.getBoxs().get(head).getNumBoxInt() == game.getColums()*game.getRows()-game.getColums() || head <= tail || game.getBoxs().get(head).getAction() || game.getBoxs().get(tail).getAction()) {
 				setLadders(amountBoxs, ladders, contador);
 
 			}else{
 
 				game.getBoxs().get(tail).setAction(true);
-				game.getBoxs().get(tail).setTypeAction(false); //true es serpiente y false escalera
+				game.getBoxs().get(tail).setTypeAction(true); //true es serpiente y false escalera
 				game.getBoxs().get(tail).setSendTo(head);
 				game.getBoxs().get(tail).setIdAction(String.valueOf(contador + 1));
 	
 				game.getBoxs().get(head).setAction(true);
-				game.getBoxs().get(head).setTypeAction(true); 
+				game.getBoxs().get(head).setTypeAction(false); 
 				game.getBoxs().get(head).setIdAction(game.getBoxs().get(tail).getIdAction());
 				setLadders(amountBoxs, ladders - 1, contador + 1);
 			}
@@ -208,15 +243,20 @@ public class SnakesAndLaddersGUI {
 		
 	}
 
-
+	/**
+	 * this method randomly creates the snakes on the board
+	 * @param amountBoxs board size
+	 * @param snakes amount snakes
+	 * @param contador
+	 */
 	public void setSnakes(int amountBoxs, int snakes, int contador) {
 
 		if(contador < amountBoxs && snakes != 0){
+			
+			int head = (int) (Math.random() * (amountBoxs - 2) + 1);
+			int tail = (int) (Math.random() * (amountBoxs - 2) + 1);
 
-			int head = (int) (Math.random() * (amountBoxs - 2) + 2);
-			int tail = (int) (Math.random() * (head - 2) + 2);
-
-			if (game.getBoxs().get(head).getAction() || game.getBoxs().get(tail).getAction()) {
+			if (game.getBoxs().get(head).getNumBoxInt() == game.getColums()*game.getRows()-game.getColums() || head <= tail || game.getBoxs().get(head).getAction() || game.getBoxs().get(tail).getAction()) {
 				setSnakes(amountBoxs, snakes, contador);
 
 			}else{
@@ -227,7 +267,7 @@ public class SnakesAndLaddersGUI {
 				game.getBoxs().get(head).setIdAction(String.valueOf(Alphabet.letter(contador)));
 			
 				game.getBoxs().get(tail).setAction(true);
-				game.getBoxs().get(tail).setTypeAction(true); 
+				game.getBoxs().get(tail).setTypeAction(false); 
 				game.getBoxs().get(tail).setIdAction(game.getBoxs().get(head).getIdAction());
 				setSnakes(amountBoxs, snakes - 1, contador + 1);
 			}
@@ -238,6 +278,14 @@ public class SnakesAndLaddersGUI {
 	}
 
 
+	/**
+	 * this method creates snakes-shaped board
+	 * @param amountBoxs board size
+	 * @param contador
+	 * @param jump every X cycles a line break
+	 * @param vali defines in which order the cells are added
+	 * @param index shaped like a snake
+	 */
 	public void createBox(int amountBoxs, int contador, int jump, boolean vali, int index) {
 
     	if(contador < amountBoxs) {
@@ -265,7 +313,7 @@ public class SnakesAndLaddersGUI {
 					num = "0" + (contador + 1);
 				}
 
-				game.getBoxs().add(new Box(num));
+				game.getBoxs().add(new Box(num, contador + 1));
 
 			}
 
@@ -279,7 +327,7 @@ public class SnakesAndLaddersGUI {
 					num = "0" + (index);
 				}
 
-				game.getBoxs().add(new Box(num));
+				game.getBoxs().add(new Box(num, index));
 				index -= 1;
 
 			}
@@ -291,10 +339,17 @@ public class SnakesAndLaddersGUI {
 	}
     
  
-	public ArrayList<String> spliter(String next, ArrayList<String> format, int contador) {
+	/**
+	 * separates the string that the user entered into an array
+	 * @param next format
+	 * @param format Array with the format
+	 * @param contador
+	 * @return Array String[] with the format
+	 */
+	public String[] spliter(String next, String[] format, int contador) {
 
     	if(contador < 5) {
-    		format.add(next.split(" ")[contador]);
+    		format[contador] =(next.split(" ")[contador]);
     		spliter(next, format, contador + 1);
     	}
     	
@@ -303,35 +358,158 @@ public class SnakesAndLaddersGUI {
     }
 
 
-	public void play(Scanner scanner) {
+	/**
+	 * this method is the board game
+	 * @param scanner
+	 * @param player player index
+	 * @throws IOException
+	 * @throws ClassNotFoundException
+	 */
+	public void play(Scanner scanner, int player) throws IOException, ClassNotFoundException {
 
-		showBoardWithEspecials(0, game.getColums() * game.getRows(), 0, game.getColums() * game.getRows() - game.getColums());
+	    System.out.print("*********************************************************************************************\n");
+		System.out.print("Tablero de Juego\n\n");
+		showBoard(0, game.getColums() * game.getRows(), 0, game.getColums() * game.getRows() - game.getColums());
+	    System.out.print("\n*********************************************************************************************\n");
+	    System.out.println("*. Precione enter para tirar el dado (" + game.getPlayers().get(player).getToken() + "):");
+		System.out.println("*. Escriba (num) para ir al Tablero de Comodines:");
+		System.out.println("*. Escriba (simul) para generar una simulacion del juego:");
+		System.out.println("*. Escriba (menu) para terminar el juego y ir al menu:");
+	    System.out.print(">");
 
-		//limpiarPantalla();
-		String vali = scanner.nextLine();
+		String index = scanner.nextLine();
 
-		if(vali.equals("1")){
-			inGame("main");
+		switch(index){
+			case "":
+				rollDice(player, scanner);
+			break;
+
+			case "num":
+				inGame("num", scanner);
+			break;
+
+			case "simul":
+				inGame("simul", scanner);
+			break;
+
+			case "menu":
+				inGame("menu", scanner);
+			break;
 		}
 
 	}
 
 
-	private void inGame(String index) {
+	/**
+	 * generates random dice to make X player move, on the other hand, it checks if the player reached the goal and declares him the winner by recording his information
+	 * @param player player index
+	 * @param scanner
+	 * @throws IOException
+	 * @throws ClassNotFoundException
+	 */
+	private void rollDice(int player, Scanner scanner) throws IOException, ClassNotFoundException{
+		int dice = (int) (Math.random() * 6 + 1);
+		System.out.println("\nEl jugador " + game.getPlayers().get(player).getToken() + " ha lanzado el dado y obtuvo el puntaje " + dice + ".\n");
+		boolean win = game.playerMove(game.getPlayers().get(player).getToken(), dice);
+
+		if(win){
+			Players winPlayer = game.searchBox(game.getPlayers().get(player).getToken(), 0, 0, 0).getPlayers().get(0);
+			winPlayer.setScore(winPlayer.getMovement() * game.getColums() * game.getRows());
+			game.setPlayers(new MeLinkedLists<Players>());
+			game.setBoxs(new MeLinkedLists<Box>());
+			game.setColums(0);
+			game.setRows(0);
+
+			System.out.print("*********************************************************************************************\n");
+			System.out.print("Ganador\n\n");
+			System.out.print("El jugador " + winPlayer.getToken() + " ha ganador el juego, con " + winPlayer.getMovement());
+			System.out.print("\n*********************************************************************************************\n");
+			System.out.println("Escriba su nombre para registrarlo en la tabla:");
+			System.out.print(">");
+			winPlayer.setName(scanner.nextLine());
+
+			game.getLeaderBoard().add(winPlayer);
+
+			ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("data\\Data.txt"));
+       		oos.writeObject(game);
+        	oos.close();
+
+			inGame("menu", scanner);
+
+
+		}else{
+
+			if(player ==  game.getPlayers().size() - 1){
+
+				play(scanner, 0);
+	
+			}else{
+				play(scanner, player + 1);
+			}
+		}
+
+		
+
+		
+
+	}
+	
+	/**
+	 * organize the scenes in the game
+	 * @param index control
+	 * @param scanner
+	 * @throws IOException
+	 * @throws ClassNotFoundException
+	 */
+	public void inGame(String index, Scanner scanner) throws IOException, ClassNotFoundException {
 
 		switch (index) {
 			case "main":
-				showBoard(0, game.getColums() * game.getRows(), 0, game.getColums() * game.getRows() - game.getColums());
+				limpiarPantalla();
+				System.out.print("*********************************************************************************************\n");
+				System.out.print("Tablero de Comodines\n\n");
+				showBoardWithEspecials(0, game.getColums() * game.getRows(), 0, game.getColums() * game.getRows() - game.getColums());
+				System.out.print("\n\n*********************************************************************************************\n");
+				System.out.println("Precione Enter para iniciar:");
+				System.out.print(">");
 
-				break;
-		
-			default:
-				System.out.println("error");
-				break;
+				if(scanner.nextLine().equals("")){
+					limpiarPantalla();
+					play(scanner, 0);
+				}
+
+			break;
+
+			case "num":
+				inGame("main", scanner);
+			
+			break;
+
+			case "simul":
+				//inGame("simul", scanner);
+				
+			break;
+
+			case "menu":
+				Main main = new Main();
+				game.setPlayers(new MeLinkedLists<Players>());
+				game.setBoxs(new MeLinkedLists<Box>());
+				game.setColums(0);
+				game.setRows(0);
+				main.init(main);
+			
+			break;
 		}
 
 	}
 
+	/**
+	 * show the board with its numbers of squares and its special squares
+	 * @param contador
+	 * @param sizeBoard board size
+	 * @param jump every X cycles a line break
+	 * @param index shaped like a snake
+	 */
 	public void showBoardWithEspecials(int contador, int sizeBoard, int jump, int index){//quitar 1 de size
 		if(contador < sizeBoard){
 
@@ -361,7 +539,13 @@ public class SnakesAndLaddersGUI {
 
 	}
 
-
+	/**
+	 * shows the board without numbers of squares, only players and special squares
+	 * @param contador 
+	 * @param sizeBoard board size
+	 * @param jump every X cycles a line break
+	 * @param index shaped like a snake
+	 */
 	public void showBoard(int contador, int sizeBoard, int jump, int index){
 
 		if(contador < sizeBoard){
@@ -392,13 +576,18 @@ public class SnakesAndLaddersGUI {
 
 	}
 
-
+	/**
+	 * load the object from Data.txt the current objent
+	 * @param data object in .txt
+	 */
 	public void init(Game data) {
 		game = new Game();
 		game = data;
 	}
 
-
+	/**
+	 * Clear windows
+	 */
 	public static void limpiarPantalla() {
         try {
             new ProcessBuilder("cmd","/c","cls").inheritIO().start().waitFor();
@@ -408,5 +597,28 @@ public class SnakesAndLaddersGUI {
 
         }
     }
+
+	/**
+	 * shows the leaderboard and returns to the menu
+	 * @param scanner
+	 * @throws ClassNotFoundException
+	 * @throws IOException
+	 */
+	public void leaderBoard(Scanner scanner) throws ClassNotFoundException, IOException {
+
+		limpiarPantalla();
+		System.out.print("*********************************************************************************************\n");
+		System.out.print("Tablero de Puntajes\n\n");
+		game.getLeaderBoard().inOrden();
+		System.out.print("\n\n*********************************************************************************************\n");
+		System.out.println("Precione Enter para salir:");
+		System.out.print(">");
+
+		if(scanner.nextLine().equals("")){
+			limpiarPantalla();
+			inGame("menu", scanner);
+		}
+
+	}
 	
 }

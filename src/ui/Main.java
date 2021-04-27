@@ -1,71 +1,94 @@
 package ui;
 
-import java.io.BufferedReader;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.Scanner;
 
 import model.Game;
 
 public class Main{
-	
+
+
+	/**
+	 * Read Objects
+	 */
 	private ObjectInputStream ois;
+
+	/**
+	 * Gui Object
+	 */
 	private SnakesAndLaddersGUI gui;
+
+	/**
+	 * Main constructor
+	 * @throws IOException
+	 */
 	
 	public Main() throws IOException {
 		gui = new SnakesAndLaddersGUI();
 	}
 
+	/**
+	 * Main Method
+	 * @param args
+	 * @throws ClassNotFoundException
+	 * @throws IOException
+	 */
+
 	public static void main(String[] args) throws ClassNotFoundException, IOException {
 		Main main = new Main();
 		
 		main.init(main);
-		
-		main.select(main);
-		
+	
 	}
+
+	/**
+	 * This method start the program, it read an object Game in a .txt
+	 * @param main
+	 * @throws IOException
+	 * @throws ClassNotFoundException
+	 */
 	
 	public void init(Main main) throws IOException, ClassNotFoundException {
-		/*Game game1 = new Game();
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-
-		for(int i = 0; i < 26; i++){
-			game1.getAlphabet().add(br.readLine());
-		}
-
-		ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("data\\Data.txt"));
-        oos.writeObject(game1);
-        oos.close();*/
-		
 		ois = new ObjectInputStream(new FileInputStream("data\\Data.txt"));
 		
 		Game game = (Game) ois.readObject();
 		ois.close();
 	
 		main.getGui().init(game);
+		main.select(main);
 		
 	}
+
+	/**
+	 * Shows what the user wants
+	 * @param main
+	 * @throws IOException
+	 * @throws ClassNotFoundException
+	 */
 	
-	public void select(Main main){
+	public void select(Main main) throws IOException, ClassNotFoundException{
 		
 		int comand = main.getGui().menus(new Scanner(System.in));
 		
 		if(comand == 1) {
 			main.getGui().format(new Scanner(System.in));
-			main.getGui().play(new Scanner(System.in));
+			main.getGui().inGame("main", new Scanner(System.in));
 			
 		}else if(comand == 2) {
+			main.getGui().leaderBoard(new Scanner(System.in));
 			
 		}else if(comand != 3) {
 			select(main);
 		}
 		
 	}
+
+	/**
+	 * Get Gui
+	 * @return gui
+	 */
 
 	public SnakesAndLaddersGUI getGui() {
 		return gui;
