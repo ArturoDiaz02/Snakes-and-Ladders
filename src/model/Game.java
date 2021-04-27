@@ -66,19 +66,20 @@ public class Game implements Serializable{
 
 		Players player = searchBox(token, 0, 0, 0).getPlayers().get(0);
 		player.setCurrentBox(player.getCurrentBox() + dice);
+		int index = searchPosition(player.getCurrentBox(), 0);
 		searchBox(token, 0, 0, 0).getPlayers().remove(0);
-		System.out.println("Index: " + player.getCurrentBox());
 		player.setMovement(player.getMovement() + 1);
 
-		if(getBoxs().get(searchPosition(player.getCurrentBox(), 0)).getAction()){
-			player.setCurrentBox(getBoxs().get(searchPosition(player.getCurrentBox(), 0)).getSendTo());
-			System.out.println("Index: " + player.getCurrentBox());
-			getBoxs().get(searchPosition(player.getCurrentBox(), 0) - 2).getPlayers().add(player);
-			
+		if(getBoxs().get(index).getTypeAction()){
+			player.setCurrentBox(getBoxs().get(getBoxs().get(index).getSendTo()).getNumBoxInt());
+			getBoxs().get(getBoxs().get(index).getSendTo()).getPlayers().add(player);
+			System.out.println("*. El jugador cayo en una casilla especial por ende su ficha queda en: " + player.getCurrentBox());
 		}else{
-			getBoxs().get(searchPosition(player.getCurrentBox(), 0)).getPlayers().add(player);
+			getBoxs().get(index).getPlayers().add(player);
 		
 		}
+
+		
 		
 	}
 
