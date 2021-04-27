@@ -2,20 +2,38 @@ package model;
 
 import java.io.Serializable;
 
-import model.LinkedList.MeLinkedLists;
+import model.LinkedList.*;
 
 public class Game implements Serializable{
 
 	private static final long serialVersionUID = 1L;
+	/**
+	 * boxes List
+	 */
 	private MeLinkedLists<Box> boxs;
-	private MeLinkedLists<Players> leaderBoard;
+	/**
+	 * winners list
+	 */
+	private BinaryTree leaderBoard;
+	/**
+	 * players list
+	 */
 	private MeLinkedLists <Players> players;
+	/**
+	 * colums
+	 */
 	private int colums;
+	/**
+	 * rows
+	 */
 	private int rows;
 
+	/**
+	 * Game constructor
+	 */
 	public Game() {
 		boxs = new MeLinkedLists<>();
-		leaderBoard =  new MeLinkedLists<>();
+		leaderBoard =  new BinaryTree();
 		players = new MeLinkedLists<>();
 		colums = 0;
 		rows = 0;		
@@ -46,11 +64,11 @@ public class Game implements Serializable{
 		this.rows = rows;
 	}
 
-	public MeLinkedLists<Players> getLeaderBoard() {
+	public BinaryTree getLeaderBoard() {
 		return leaderBoard;
 	}
 
-	public void setLeaderBoard(MeLinkedLists<Players> leaderBoard) {
+	public void setLeaderBoard(BinaryTree leaderBoard) {
 		this.leaderBoard = leaderBoard;
 	}
 
@@ -62,25 +80,41 @@ public class Game implements Serializable{
 		this.boxs = boxs;
 	}
 
+	/**
+	 * moves players according to the data and only allows you to win if you land directly on the last square
+	 * @param token player token
+	 * @param dice die value
+	 * @return return according to whether the no was won
+	 */
+
 	public boolean playerMove(Character token, int dice){
 
 		Players player = searchBox(token, 0, 0, 0).getPlayers().get(0);
 		player.setCurrentBox(player.getCurrentBox() + dice);
-		int index = searchPosition(player.getCurrentBox(), 0);
-		searchBox(token, 0, 0, 0).getPlayers().remove(0);
-		player.setMovement(player.getMovement() + 1);
-
+		
 		if(player.getCurrentBox() == colums*rows){
 
 			return true;
 
 		}else if(player.getCurrentBox() > colums*rows){
 			int difference = player.getCurrentBox() - colums*rows;
+			getBoxs().get(searchPosition(player.getCurrentBox() - dice, 0)).getPlayers().remove(0);
 			player.setCurrentBox(colums*rows);
 			getBoxs().get(colums*rows - colums).getPlayers().add(player);
-			return playerMove(token, difference * (-1));
+
+			if(dice > colums*rows){
+				return playerMove(token, 2 * (-1));
+
+			}else{
+				return playerMove(token, difference * (-1));
+			}
+			
 			
 		}else{
+
+			int index = searchPosition(player.getCurrentBox(), 0);
+			searchBox(token, 0, 0, 0).getPlayers().remove(0);
+			player.setMovement(player.getMovement() + 1);
 
 			if(getBoxs().get(index).getTypeAction()){
 				player.setCurrentBox(getBoxs().get(getBoxs().get(index).getSendTo()).getNumBoxInt());
@@ -97,8 +131,15 @@ public class Game implements Serializable{
 
 	}
 
-
-	private Box searchBox(Character token, int indexBox, int indexPlayer, int contador){
+	/**
+	 * search in which box a player is located by his token
+	 * @param token player token
+	 * @param indexBox 
+	 * @param indexPlayer
+	 * @param contador
+	 * @return return the box where the player is
+	 */
+	public Box searchBox(Character token, int indexBox, int indexPlayer, int contador){
 
 		if (getBoxs().get(indexBox).getPlayers().size() > contador) {
 
@@ -120,6 +161,13 @@ public class Game implements Serializable{
 		
 		
 	}
+
+	/**
+	 * finds the index of a cell based on its value
+	 * @param num value
+	 * @param index cell
+	 * @return
+	 */
 
 	private int searchPosition(int num, int index){
 

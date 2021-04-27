@@ -7,33 +7,13 @@ public class MeLinkedLists<E> implements Serializable {
 	private static final long serialVersionUID = 4L;
 	private Node<E> head;
     private Node<E> tail;
-    private int colums;
-    private int rows;
     private int size;
 
     public MeLinkedLists() {
         head = null;
         size = 0;
         tail = null;
-        colums = 0;
-        size = 0;
     }
-    
-    public int getColums() {
-		return colums;
-	}
-
-	public void setColums(int colums) {
-		this.colums = colums;
-	}
-
-	public int getRows() {
-		return rows;
-	}
-
-	public void setRows(int rows) {
-		this.rows = rows;
-	}
 
 	public Node<E> getHead() {
         return head;

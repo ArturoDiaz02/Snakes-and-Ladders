@@ -8,6 +8,7 @@ public class Players implements Serializable{
 	private String name;
 	private Character token;
 	private int movement;
+	private int score;
 	private int currentBox;
 	
 	public Players(Character token) {
@@ -15,6 +16,15 @@ public class Players implements Serializable{
 		this.token = token;
 		this.movement = 0;
 		this.currentBox = 1;
+		this.score = 0;
+	}
+
+	public int getScore() {
+		return this.score;
+	}
+
+	public void setScore(int score) {
+		this.score = score;
 	}
 
 	public String getName() {
