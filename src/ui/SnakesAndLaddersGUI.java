@@ -186,21 +186,20 @@ public class SnakesAndLaddersGUI {
 		if(contador < amountBoxs && ladders != 0){
 
 			int head = (int) (Math.random() * (amountBoxs - 2) + 1);
-			int tail = (int) (Math.random() * (head - 2)  + 2);
+			int tail = (int) (Math.random() * (head - 2)  + 1);
 			
 
-			if (head == amountBoxs - 1 || head == tail || game.getBoxs().get(head).getAction() || game.getBoxs().get(tail).getAction()) {
+			if (head >= amountBoxs - 2 || tail == 0 || head <= tail || game.getBoxs().get(head).getAction() || game.getBoxs().get(tail).getAction()) {
 				setLadders(amountBoxs, ladders, contador);
 
 			}else{
 		
 				game.getBoxs().get(tail).setAction(true);
-				game.getBoxs().get(tail).setTypeAction(false); //true es serpiente y false escalera
+				game.getBoxs().get(tail).setTypeAction(true);
 				game.getBoxs().get(tail).setSendTo(head);
 				game.getBoxs().get(tail).setIdAction(String.valueOf(contador + 1));
 	
-				game.getBoxs().get(head).setAction(true);
-				game.getBoxs().get(head).setTypeAction(false); 
+				game.getBoxs().get(head).setTypeAction(true); 
 				game.getBoxs().get(head).setIdAction(game.getBoxs().get(tail).getIdAction());
 				setLadders(amountBoxs, ladders - 1, contador + 1);
 			}
@@ -216,9 +215,9 @@ public class SnakesAndLaddersGUI {
 		if(contador < amountBoxs && snakes != 0){
 
 			int head = (int) (Math.random() * (amountBoxs - 2) + 1);
-			int tail = (int) (Math.random() * (head - 2) + 2);
+			int tail = (int) (Math.random() * (head - 2) + 1);
 
-			if (head == amountBoxs - 1 || head == tail || game.getBoxs().get(head).getAction() || game.getBoxs().get(tail).getAction()) {
+			if (head >= amountBoxs - 2 || tail == 0 || head <= tail || game.getBoxs().get(head).getAction() || game.getBoxs().get(tail).getAction()) {
 				setSnakes(amountBoxs, snakes, contador);
 				
 			}else{
@@ -228,7 +227,6 @@ public class SnakesAndLaddersGUI {
 				game.getBoxs().get(head).setSendTo(tail);
 				game.getBoxs().get(head).setIdAction(String.valueOf(Alphabet.letter(contador)));
 			
-				game.getBoxs().get(tail).setAction(true);
 				game.getBoxs().get(tail).setTypeAction(true); 
 				game.getBoxs().get(tail).setIdAction(game.getBoxs().get(head).getIdAction());
 				setSnakes(amountBoxs, snakes - 1, contador + 1);
@@ -387,7 +385,7 @@ public class SnakesAndLaddersGUI {
 	public void showBoardWithEspecials(int contador, int sizeBoard, int jump, int index){//quitar 1 de size
 		if(contador < sizeBoard){
 
-			if(game.getBoxs().get(index + jump).getAction()){
+			if(game.getBoxs().get(index + jump).getTypeAction()){
 				System.out.print("[" + game.getBoxs().get(index + jump).getNumBox() + " " + game.getBoxs().get(index + jump).getIdAction() + "]");
 	
 			}else{
@@ -418,7 +416,7 @@ public class SnakesAndLaddersGUI {
 
 		if(contador < sizeBoard){
 
-			if(game.getBoxs().get(index + jump).getAction()){
+			if(game.getBoxs().get(index + jump).getTypeAction()){
 				System.out.print("[" + game.getBoxs().get(index + jump).getIdAction() + " " + game.getBoxs().get(index + jump).playerIn() + "]");
 
 			}else{

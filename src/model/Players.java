@@ -14,7 +14,7 @@ public class Players implements Serializable{
 		this.name = null;
 		this.token = token;
 		this.movement = 0;
-		this.currentBox = 0;
+		this.currentBox = 1;
 	}
 
 	public String getName() {

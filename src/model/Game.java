@@ -65,18 +65,18 @@ public class Game implements Serializable{
 	public void playerMove(Character token, int dice){
 
 		Players player = searchBox(token, 0, 0, 0).getPlayers().get(0);
-		player.setCurrentBox(searchPosition(player.getCurrentBox() + dice, 0));
+		player.setCurrentBox(player.getCurrentBox() + dice);
 		searchBox(token, 0, 0, 0).getPlayers().remove(0);
-
+		System.out.println("Index: " + player.getCurrentBox());
 		player.setMovement(player.getMovement() + 1);
 
-		if(getBoxs().get(player.getCurrentBox()).getAction() && getBoxs().get(player.getCurrentBox()).getSendTo() != 0){
-			player.setCurrentBox(searchPosition(getBoxs().get(player.getCurrentBox()).getSendTo(), 0));
-
-			getBoxs().get(searchPosition(player.getCurrentBox() + 1, 0)).getPlayers().add(player);
+		if(getBoxs().get(searchPosition(player.getCurrentBox(), 0)).getAction()){
+			player.setCurrentBox(getBoxs().get(searchPosition(player.getCurrentBox(), 0)).getSendTo());
+			System.out.println("Index: " + player.getCurrentBox());
+			getBoxs().get(searchPosition(player.getCurrentBox(), 0) - 2).getPlayers().add(player);
 			
 		}else{
-			getBoxs().get(player.getCurrentBox() + 1).getPlayers().add(player);
+			getBoxs().get(searchPosition(player.getCurrentBox(), 0)).getPlayers().add(player);
 		
 		}
 		
