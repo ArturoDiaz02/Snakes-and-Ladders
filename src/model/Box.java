@@ -13,16 +13,27 @@ public class Box implements Serializable{
 	private boolean typeAction;
 	private String idAction;
 	private int sendTo;
+	private int NumBoxInt;
 	private MeLinkedLists<Players> players;
 	
-	public Box(String num) {
+	public Box(String num, int numInt) {
 		this.numBox = num;
 		this.action = false;
 		this.typeAction = false;
 		this.players = new MeLinkedLists<>();
 		this.idAction = "";
+		this.NumBoxInt = numInt;
 		
 	}
+
+	public int getNumBoxInt() {
+		return this.NumBoxInt;
+	}
+
+	public void setNumBoxInt(int NumBoxInt) {
+		this.NumBoxInt = NumBoxInt;
+	}
+
 
 	public boolean getAction() {
 		return this.action;
@@ -104,6 +115,11 @@ public class Box implements Serializable{
 		}
 
 		return players;
+	}
+
+	public Character getPlayerToken(int index){
+
+		return getPlayers().get(index).getToken();
 	}
 	
 	

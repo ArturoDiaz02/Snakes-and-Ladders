@@ -51,7 +51,7 @@ public class MeLinkedLists<E> implements Serializable {
         return size;
     }
 
-   /* public void add(E e) {
+    public void add(E e) {
         
         if (head == null) {
             head = new Node<E>(e);
@@ -81,93 +81,55 @@ public class MeLinkedLists<E> implements Serializable {
             head = temp;
         }
 
-    }*/
-
-    public void add(E e) {
-        
-        if (head == null) {
-            head = new Node<E>(e);
-            tail = head;
-
-        }else{
-            Node<E> temp = head;
-
-            for(int i = 0; i < size; i++){
-
-                if(temp.getNext() != null){
-                    temp = temp.getNext();
-
-                }else{
-                    temp.setNext(new Node<E>(e));
-                    temp.getNext().setPrevious(temp);
-                    tail = temp.getNext();
-
-                }
-            }
-
-            for(int i = 0; i < size; i++){
-
-                if(temp.getPrevious() != null){
-                    temp = temp.getPrevious();
-
-                }else{
-                    head = temp;
-                }
-
-            }
-
-
-        }
-
-        size++;
     }
 
-   /* public E get(int index){
+    public int indexOf(E e){
+        return indexOf(e, head, 0);
+    }
+
+    private int indexOf(E e, Node<E> temp, int contador){
+        if(e.equals(temp.getItem())){
+            return contador;
+
+        }else{
+            return indexOf(e, temp.getNext(), contador + 1);
+
+        }
+    }
+
+    public E get(int index){
        
-        return get(index, head, 0);
+        return get(index, head);
 
     }
     
-    private E get(int index, Node<E> temp, int contador){
+    private E get(int index, Node<E> temp){
 
-    	
-        if(contador < index && index < size) {
-        	get(index, temp.getNext(), contador + 1);
-        }
-        
-        return temp.getItem();
+        if(index == 0){
+            return temp.getItem();
 
-    }*/
-
-    public E get(int index){
-        int contador = 0;
-        Node<E> temp = head;
-
-        while(contador < index && index < size){
-
-            temp = temp.getNext();
-            contador++;
+        }else{
+            return get(index - 1, temp.getNext());
 
         }
-
-        return temp.getItem();
-
+       
     }
 
     public Node<E> getNode(int index){
        
-        return getNode(index, head, 0);
+        return getNode(index, head);
 
     }
     
-    private Node<E> getNode(int index, Node<E> temp, int contador){
+    private Node<E> getNode(int index, Node<E> temp){
 
-    	
-        if(contador < index && index < size) {
-        	//get(index, temp.getNext(), contador + 1);
+        if(index == 0){
+            return temp;
+
+        }else{
+            return getNode(index - 1, temp.getNext());
+
         }
-        
-        return temp;
 
     }
 
@@ -175,16 +137,11 @@ public class MeLinkedLists<E> implements Serializable {
         if(index == 0){
             head = head.getNext();
         }else{
-            getNode(index - 1).setNext(getNode(index).getNext());
+            getNode(index).getPrevious().setNext(getNode(index).getNext());
+            getNode(index).getNext().setPrevious(getNode(index).getPrevious());
         }
 
-    }
-    
-    public E getAndRemove(int index){
-        E item = get(index);
-        remove(index);
-
-        return item;
+        size -= 1;
     }
     
 }
