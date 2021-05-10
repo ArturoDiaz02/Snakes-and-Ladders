@@ -62,15 +62,15 @@ public class BinaryTree implements Serializable {
 	}
 
 	public void inOrden(){
-		inOrden(head, 1);
+		inOrden(head);
 	}
 
 
-	private void inOrden(Node<Players> player, int contador){
+	private void inOrden(Node<Players> player){
 		if(player != null){
-			inOrden(player.getPrevious(), contador + 1);
-			System.out.println(contador + ". " + "Nombre: " + player.getItem().getName() + ", Token: " + player.getItem().getToken() + ", Score: " + player.getItem().getScore());
-			inOrden(player.getNext(), contador + 1);
+			inOrden(player.getPrevious());
+			System.out.println("Nombre: " + player.getItem().getName() + ", Token: " + player.getItem().getToken() + ", Score: " + player.getItem().getScore());
+			inOrden(player.getNext());
 		}
 	}
   		

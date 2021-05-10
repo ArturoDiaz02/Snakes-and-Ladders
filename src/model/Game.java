@@ -93,20 +93,20 @@ public class Game implements Serializable{
 		player.setCurrentBox(player.getCurrentBox() + dice);
 		
 		if(player.getCurrentBox() == colums*rows){
-
+			player.setMovement(player.getMovement() + 1);
 			return true;
 
 		}else if(player.getCurrentBox() > colums*rows){
-			int difference = player.getCurrentBox() - colums*rows;
+			int difference = colums*rows - (player.getCurrentBox() - dice);
 			getBoxs().get(searchPosition(player.getCurrentBox() - dice, 0)).getPlayers().remove(0);
 			player.setCurrentBox(colums*rows);
 			getBoxs().get(colums*rows - colums).getPlayers().add(player);
 
-			if(dice > colums*rows){
-				return playerMove(token, 2 * (-1));
+			if(dice - difference == colums*rows){
+				return playerMove(token, (colums*rows - 1) * (-1));
 
 			}else{
-				return playerMove(token, difference * (-1));
+				return playerMove(token, (dice - difference) * (-1));
 			}
 			
 			
