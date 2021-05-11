@@ -1,0 +1,1 @@
+No juntamos el diagrama y los requerimientos en un mismo archivo por que el diagrama se veria muy pequeño y no era legible 

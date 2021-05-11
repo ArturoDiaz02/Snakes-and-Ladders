@@ -10,7 +10,7 @@ public class Players implements Serializable{
 	private int movement;
 	private int score;
 	private int currentBox;
-	
+
 	public Players(Character token) {
 		this.name = null;
 		this.token = token;

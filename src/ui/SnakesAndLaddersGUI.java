@@ -111,65 +111,26 @@ public class SnakesAndLaddersGUI {
 		game.setRows(rows);
 
 		if((rows * colums) % 2 != 0){ 
-			if((rows * colums) - 1 < snakes*2 + ladders*2){
-				if(snakes > ladders){
+			if((rows * colums) - 3 < snakes*2 + ladders*2){
 
-					if(((rows * colums) - 1) < ladders*2){
-						ladders = ((rows * colums) - 1) / 2;
-					}
-
-					snakes = (((rows * colums) - 1) - ladders*2) / 2;
-
-				}else if(snakes < ladders){
-
-					if(((rows * colums) - 1) < snakes*2){
-						snakes = ((rows * colums) - 1) / 2;
-					}
-
-					ladders = (((rows * colums) - 1) - snakes*2) / 2;
+				if(((rows * colums - 3) / 2) % 2 != 0){
+					snakes = (rows * colums - 3) / 4;
+					ladders = (rows * colums - 3) / 2 - snakes;
 
 				}else{
-
-					snakes = ((rows * colums) - 1) / 4;
+					snakes = (rows * colums - 3) / 4;
 					ladders = snakes;
 
 				}
 
-				/*if(snakes > 26){
-					snakes = 26;
-				}*/
 			}
 		}
 
 		if((rows * colums) % 2 == 0){ 
 			if((rows * colums) - 2 < snakes*2 + ladders*2){
-				if(snakes > ladders){
 
-					if(((rows * colums) - 2) < ladders*2){
-						ladders = ((rows * colums) - 2) / 2;
-					}
-
-					snakes = (((rows * colums) - 2) - ladders*2) / 2;
-
-				}else if(snakes < ladders){
-
-					if(((rows * colums) - 2) < snakes*2){
-						snakes = ((rows * colums) - 2) / 2;
-					}
-
-					ladders = (((rows * colums) - 2) - snakes*2) / 2;
-
-				}else{
-
-					snakes = ((rows * colums) - 2) / 4;
-					ladders = snakes;
-
-					
-				}
-
-				/*if(snakes > 26){
-					snakes = 26;
-				}*/
+				snakes = (rows * colums - 2) / 4;
+				ladders = snakes;	
 
 			}
 		}
@@ -446,7 +407,7 @@ public class SnakesAndLaddersGUI {
 
 			game.getLeaderBoard().add(winPlayer);
 
-			ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("data\\Data.txt"));
+			ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("docs\\storage\\Data.txt"));
        		oos.writeObject(game);
         	oos.close();
 

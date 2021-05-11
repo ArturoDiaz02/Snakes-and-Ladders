@@ -51,7 +51,7 @@ public class Main{
 	 */
 	
 	public void init(Main main) throws IOException, ClassNotFoundException {
-		ois = new ObjectInputStream(new FileInputStream("data\\Data.txt"));
+		ois = new ObjectInputStream(new FileInputStream("docs\\storage\\Data.txt"));
 		
 		Game game = (Game) ois.readObject();
 		ois.close();
@@ -89,7 +89,6 @@ public class Main{
 	 * Get Gui
 	 * @return gui
 	 */
-
 	public SnakesAndLaddersGUI getGui() {
 		return gui;
 	}
