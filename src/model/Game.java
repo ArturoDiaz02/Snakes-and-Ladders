@@ -39,43 +39,82 @@ public class Game implements Serializable{
 		rows = 0;		
 	}
 
+	/**
+	 * Get MeLinkedLists Players
+	 * @return Players
+	 */
 	public MeLinkedLists<Players> getPlayers() {
 		return this.players;
 	}
 
+	/**
+	 * Set MeLinkedLists Players
+	 * @param players
+	 */
 	public void setPlayers(MeLinkedLists<Players> players) {
 		this.players = players;
 	}
 	
-
+	/**
+	 * Get colums
+	 * @return colums
+	 */
 	public int getColums() {
 		return this.colums;
 	}
 
+	/**
+	 * Get rows
+	 * @return rows
+	 */
 	public int getRows() {
 		return this.rows;
 	}
 
+	/**
+	 * Set colums
+	 * @param colums
+	 */
 	public void setColums(int colums) {
 		this.colums = colums;
 	}
-	
+
+	/**
+	 * Set rows
+	 * @param rows
+	 */
 	public void setRows(int rows) {
 		this.rows = rows;
 	}
 
+	/**
+	 * Get leaderBoard
+	 * @return leaderBoard
+	 */
 	public BinaryTree getLeaderBoard() {
 		return leaderBoard;
 	}
 
+	/**
+	 * Set leaderBoard
+	 * @param leaderBoard
+	 */
 	public void setLeaderBoard(BinaryTree leaderBoard) {
 		this.leaderBoard = leaderBoard;
 	}
 
+	/**
+	 * Get boxs
+	 * @return boxs
+	 */
 	public MeLinkedLists<Box> getBoxs() {
 		return boxs;
 	}
 
+	/**
+	 * Set boxs
+	 * @param boxs
+	 */
 	public void setBoxs(MeLinkedLists<Box> boxs) {
 		this.boxs = boxs;
 	}
